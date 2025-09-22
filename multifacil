@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MultiFácil — Utilidades & Variedades</title>
+  <meta name="description" content="MultiFácil — loja de utilidades e variedades com redirecionamento seguro para o AliExpress." />
+  <style>
+    :root {
+      --gap: 18px;
+      --radius: 12px;
+    }
+
+    /* Tema claro */
+    @media (prefers-color-scheme: light) {
+      body { background: #f5f7fb; color: #111827; }
+      .card { background: #ffffff; color: #111827; }
+      .muted { color: #6b7280; }
+      .accent { background: #1f7aef; color: #ffffff; }
+    }
+
+    /* Tema escuro */
+    @media (prefers-color-scheme: dark) {
+      body { background: #0f172a; color: #f1f5f9; }
+      .card { background: #1e293b; color: #f1f5f9; }
+      .muted { color: #94a3b8; }
+      .accent { background: #38bdf8; color: #0f172a; }
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Roboto, "Segoe UI", sans-serif;
+      padding: 28px 18px;
+      display: flex;
+      justify-content: center;
+    }
+    .container { width: 100%; max-width: 1100px; }
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      width: 56px; height: 56px; border-radius: var(--radius);
+      background: linear-gradient(135deg, #2b6de9, #1fb6ff);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 20px; color: white;
+    }
+    h1 { font-size: 20px; margin: 0; }
+    .lead { margin: 0; font-size: 14px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: var(--gap);
+    }
+    .card {
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      display: flex; flex-direction: column; gap: 10px;
+      min-height: 280px;
+    }
+    .product-img {
+      height: 160px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      background: #cbd5e1;
+      overflow: hidden;
+    }
+    .product-img img { max-width: 100%; height: 100%; object-fit: cover; }
+    .title { font-weight: 700; font-size: 16px; margin: 0; }
+    .price { font-weight: 700; }
+    .desc { font-size: 13px; margin: 0 0 6px 0; flex: 1; }
+    .buy {
+      padding: 10px 12px; border-radius: 8px; border: none; cursor: pointer;
+      font-weight: 700; width: 100%;
+    }
+    footer { margin-top: 22px; font-size: 13px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">MF</div>
+        <div>
+          <h1>MultiFácil</h1>
+          <p class="lead muted">Utilidades & Variedades</p>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <div id="products" class="grid"></div>
+    </section>
+
+    <footer>
+      <small>© <span id="year"></span> MultiFácil — redirecionamento para AliExpress.</small>
+    </footer>
+  </div>
+
+  <script>
+    const REDIRECT_URL = "https://www.aliexpress.com/";
+
+    // Modelo de produto vazio para você duplicar
+    const products = [
+      { id: "p001", name: "Produto Exemplo 1", price: "R$ 99,90", img: "https://via.placeholder.com/600x400.png?text=Produto+1", desc: "Descrição curta do produto." },
+      { id: "p002", name: "Produto Exemplo 2", price: "R$ 59,90", img: "https://via.placeholder.com/600x400.png?text=Produto+2", desc: "Descrição curta do produto." }
+    ];
+
+    function renderProducts() {
+      const container = document.getElementById('products');
+      container.innerHTML = "";
+      products.forEach(p => {
+        const card = document.createElement('article');
+        card.className = "card";
+        card.innerHTML = `
+          <div class="product-img"><img src="${p.img}" alt="${p.name}"></div>
+          <h2 class="title">${p.name}</h2>
+          <div class="price">${p.price}</div>
+          <p class="desc">${p.desc}</p>
+          <button class="buy accent" data-id="${p.id}">Comprar</button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    document.addEventListener("click", e => {
+      const btn = e.target.closest(".buy");
+      if (btn) {
+        const id = btn.getAttribute("data-id");
+        const url = new URL(REDIRECT_URL);
+        url.searchParams.set("product", id);
+        window.location.href = url.toString();
+      }
+    });
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+    renderProducts();
+  </script>
+</body>
+</html>
